@@ -27,7 +27,7 @@ function init()
 
 function run-once()
 {
-  ./random-sort 5 | grep Triée | awk '{print $3}'
+  ./random-sort $1 | grep Triée | awk '{print $3}'
 }
 
 function main()
