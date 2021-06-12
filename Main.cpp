@@ -5,8 +5,33 @@
 #include <string.h>
 #include <climits>
 #include <time.h>
+#include <fstream>
 
 using namespace std;
+
+int getSeed()
+{
+  int rnd = 0;
+  size_t size = sizeof(rnd);
+  ifstream urandom("/dev/urandom", ios::in|ios::binary);
+  if (urandom)
+  {
+    urandom.read(reinterpret_cast<char *>(&rnd), size);
+    if (!urandom)
+    {
+      cerr << "Lecture de urandom échouée (" << errno << "): " << strerror(errno) << endl;
+      exit(EXIT_FAILURE);
+    }
+    urandom.close();
+  }
+  else
+  {
+    cerr << "Ouverture de urandom échouée (" << errno << "): " << strerror(errno) << endl;
+    exit(EXIT_FAILURE);
+  }
+
+  return rnd;
+}
 
 /**
  * Usage
@@ -47,7 +72,7 @@ List *trySort(List *l)
 int main(int argc, char *argv[])
 {
   // Initialisation des nombres aléatoires.
-  srand (time(NULL));
+  srand(getSeed());
 
   // A besoin d'un paramètre exactement.
   if (argc != 2)
